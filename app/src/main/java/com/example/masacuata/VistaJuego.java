@@ -42,7 +42,7 @@ public class VistaJuego extends View {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        //canvas.drawColor(0x);
+
         for (int i = 0; i < arrArea.size(); i++)
         {
             canvas.drawBitmap(arrArea.get(i).getBm(), arrArea.get(i).getX(), arrArea.get(i).getY(), null);
