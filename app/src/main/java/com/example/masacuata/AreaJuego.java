@@ -1,7 +1,7 @@
 package com.example.masacuata;
 
 import android.graphics.Bitmap;
-
+//metodo constructor
 public class AreaJuego {
     private Bitmap bm;
     private int x, y, ancho, altura;
