@@ -1,6 +1,7 @@
 package com.example.masacuata;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 
 import java.util.ArrayList;
 
@@ -34,6 +35,17 @@ public class Snake {
         bm_tail_right= Bitmap.createBitmap(bm, 11*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
         bm_tail_left= Bitmap.createBitmap(bm, 12*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
         bm_tail_down= Bitmap.createBitmap(bm, 13*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
+        arrPartSnake.add(new PartSnake(bm_head_right, x, y));
+        for (int i= 1; i< length - 1; i++){
+            arrPartSnake.add(new PartSnake(bm_body_horizontal, arrPartSnake.get(i-1).getX() - VistaJuego.tamanoMapa, y));
+        }
+        arrPartSnake.add(new PartSnake(bm_tail_right, arrPartSnake.get(length-2).getX() - VistaJuego.tamanoMapa, y));
+    }
+
+    public void draw(Canvas canvas){
+        for (int i= 0; i< length; i++){
+            canvas.drawBitmap(arrPartSnake.get(i).getBm(), arrPartSnake.get(i).getX(), arrPartSnake.get(i).getY(), null);
+        }
     }
 
     //Get y Sett

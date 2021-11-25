@@ -12,16 +12,23 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 public class VistaJuego extends View {
-    private Bitmap bmArea1, bmArea2;
+    private Bitmap bmArea1, bmArea2, bmSnake;
     public static int tamanoMapa = 75*Constante.PANTALLA_ANCHO/1080;
     private int al= 19, an = 12;
     private ArrayList<AreaJuego> arrArea = new ArrayList<>();
+
+    private Snake snake;
+
     public VistaJuego(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         bmArea1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.piedra);
         bmArea1 = Bitmap.createScaledBitmap(bmArea1,tamanoMapa, tamanoMapa, true);
         bmArea2 = BitmapFactory.decodeResource(this.getResources(), R.drawable.piedra2);
         bmArea2 = Bitmap.createScaledBitmap(bmArea2,tamanoMapa, tamanoMapa, true);
+        //*********************************
+        bmSnake = BitmapFactory.decodeResource(this.getResources(), R.drawable.mazacuata);
+        bmSnake = Bitmap.createScaledBitmap(bmSnake,14*tamanoMapa, tamanoMapa, true);
+
 
         for (int i = 0; i < al; i++){
             for (int j = 0; j < an; j++){
@@ -35,8 +42,8 @@ public class VistaJuego extends View {
 
                 }
             }
-
         }
+        snake= new Snake(bmSnake, arrArea.get(126).getX(), arrArea.get(126).getY(), 4);
     }
 
     @Override
@@ -47,5 +54,6 @@ public class VistaJuego extends View {
         {
             canvas.drawBitmap(arrArea.get(i).getBm(), arrArea.get(i).getX(), arrArea.get(i).getY(), null);
         }
+        snake.draw(canvas);
     }
 }
