@@ -1,4 +1,2 @@
-package com.example.masacuata;
-
-public class Snake {
+package com.example.masacuata;public class Snake {
 }
