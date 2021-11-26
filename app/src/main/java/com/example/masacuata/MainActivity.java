@@ -7,7 +7,7 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 public class MainActivity extends AppCompatActivity {
-//Buenas tardes masturbanda
+//Buenas
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
