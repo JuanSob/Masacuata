@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -12,10 +13,11 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.LogRecord;
 
 public class VistaJuego extends View {
-    private Bitmap bmArea1, bmArea2, bmSnake;
+    private Bitmap bmArea1, bmArea2, bmSnake, bmBaleada;
     public static int tamanoMapa = 75*Constante.PANTALLA_ANCHO/1080;
     private int al= 19, an = 12;
     private ArrayList<AreaJuego> arrArea = new ArrayList<>();
@@ -25,6 +27,7 @@ public class VistaJuego extends View {
     private float mx,my;
     private Handler handler;
     private Runnable r;
+    private Baleada baleada;
     public VistaJuego(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         bmArea1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.piedra);
@@ -34,7 +37,8 @@ public class VistaJuego extends View {
         //*********************************
         bmSnake = BitmapFactory.decodeResource(this.getResources(), R.drawable.mazacuata);
         bmSnake = Bitmap.createScaledBitmap(bmSnake,14*tamanoMapa, tamanoMapa, true);
-
+        bmBaleada = BitmapFactory.decodeResource(this.getResources(), R.drawable.baleada);
+        bmBaleada = Bitmap.createScaledBitmap(bmBaleada,14*tamanoMapa, tamanoMapa, true);
 
         for (int i = 0; i < al; i++){
             for (int j = 0; j < an; j++){
@@ -50,6 +54,7 @@ public class VistaJuego extends View {
             }
         }
         snake= new Snake(bmSnake, arrArea.get(126).getX(), arrArea.get(126).getY(), 4);
+        baleada = new Baleada(bmBaleada,arrArea.get(randomBaleada()[0]).getX(), arrArea.get(randomBaleada()[1]).getY());
         handler= new Handler();
         r= new Runnable() {
             @Override
@@ -109,6 +114,37 @@ public class VistaJuego extends View {
         }
         snake.update();
         snake.draw(canvas);
+        baleada.draw(canvas);
+        if(snake.getArrPartSnake().get(0).getrBody().intersect(baleada.getR())){
+            randomBaleada();
+            baleada.reset(arrArea.get(randomBaleada()[0]).getX(), arrArea.get(randomBaleada()[1]).getY());
+            snake.addPart();
+        }
         handler.postDelayed(r,100);
+    }
+
+    public int[] randomBaleada(){
+        int []xy = new int[2];
+        Random r = new Random();
+        xy[0] = r.nextInt(arrArea.size() - 1);
+        xy[1] = r.nextInt(arrArea.size() - 1);
+        Rect rect = new Rect(arrArea.get(xy[0]).getX(), arrArea.get(xy[1]).getY(), arrArea.get(xy[0]).getX()+tamanoMapa, arrArea.get(xy[1]).getY()+tamanoMapa);
+        boolean check = true;
+        while (check){
+            check = false;
+            for(int i=0; i < snake.getArrPartSnake().size(); i++){
+                if(rect.intersect(snake.getArrPartSnake().get(i).getrBody())){
+                    check = true;
+                    xy[0] = r.nextInt(arrArea.size()-1);
+                    xy[1] = r.nextInt(arrArea.size()-1);
+                    rect = new Rect(arrArea.get(xy[0]).getX(), arrArea.get(xy[1]).getY(), arrArea.get(xy[0]).getX()+tamanoMapa, arrArea.get(xy[1]).getY()+tamanoMapa);
+
+                }
+            }
+        }
+
+        return xy;
+
+
     }
 }
