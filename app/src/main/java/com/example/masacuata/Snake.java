@@ -320,7 +320,7 @@ public class Snake {
         }else if(p.getBm() == bm_tail_up){
             this.arrPartSnake.add(new PartSnake(bm_tail_up, p.getX(), p.getY()+VistaJuego.tamanoMapa));
         }else if(p.getBm() == bm_tail_down){
-            this.arrPartSnake.add(new PartSnake(bm_tail_right, p.getX(), p.getY()-VistaJuego.tamanoMapa));
+            this.arrPartSnake.add(new PartSnake(bm_tail_down, p.getX(), p.getY()-VistaJuego.tamanoMapa));
         }
     }
 }

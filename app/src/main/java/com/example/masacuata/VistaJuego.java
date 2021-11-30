@@ -38,7 +38,7 @@ public class VistaJuego extends View {
         bmSnake = BitmapFactory.decodeResource(this.getResources(), R.drawable.mazacuata);
         bmSnake = Bitmap.createScaledBitmap(bmSnake,14*tamanoMapa, tamanoMapa, true);
         bmBaleada = BitmapFactory.decodeResource(this.getResources(), R.drawable.baleada);
-        bmBaleada = Bitmap.createScaledBitmap(bmBaleada,14*tamanoMapa, tamanoMapa, true);
+        bmBaleada = Bitmap.createScaledBitmap(bmBaleada,tamanoMapa, tamanoMapa, true);
 
         for (int i = 0; i < al; i++){
             for (int j = 0; j < an; j++){
@@ -127,7 +127,7 @@ public class VistaJuego extends View {
         int []xy = new int[2];
         Random r = new Random();
         xy[0] = r.nextInt(arrArea.size() - 1);
-        xy[1] = r.nextInt(arrArea.size() - 1);
+        xy[1] = r.nextInt(arrArea.size() -1);
         Rect rect = new Rect(arrArea.get(xy[0]).getX(), arrArea.get(xy[1]).getY(), arrArea.get(xy[0]).getX()+tamanoMapa, arrArea.get(xy[1]).getY()+tamanoMapa);
         boolean check = true;
         while (check){
