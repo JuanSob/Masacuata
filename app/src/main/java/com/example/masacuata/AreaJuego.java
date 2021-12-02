@@ -1,11 +1,16 @@
 package com.example.masacuata;
 
 import android.graphics.Bitmap;
-//metodo constructor
+
 public class AreaJuego {
+
+    //Importa la clase Bitmap
     private Bitmap bm;
+
+    //Creación Atributos
     private int x, y, ancho, altura;
 
+    //Metodo constructor de la clase
     public AreaJuego(Bitmap bm, int x, int y, int ancho, int altura) {
         this.bm = bm;
         this.x = x;
@@ -14,6 +19,7 @@ public class AreaJuego {
         this.altura = altura;
     }
 
+    //Encapsulamiento de los atributos
     public Bitmap getBm() {
         return bm;
     }

@@ -1,3 +1,4 @@
+//Interfaz del juego
 package com.example.masacuata;
 
 import android.content.Context;
@@ -22,10 +23,16 @@ import java.util.Random;
 import java.util.logging.LogRecord;
 
 public class VistaJuego extends View {
-    private Bitmap bmGrass1, bmGrass2, bmSnake1, bmApple;
-    private ArrayList<AreaJuego> arrGrass = new ArrayList<>();
-    private int w = 12, h=21;
+
+    //Importat la clase Bitmap con sus atributos
+    private Bitmap pierda1, piedra2, bmMasacuata, bmBaleada;
+
+    private ArrayList<AreaJuego> arregloPiedras = new ArrayList<>();
+    //Atributos en los que le damos el numero de cuadros por ancho y por alto
+    private int anchoArea = 12, altoArea=21;
+    //Atributo para el ancho de la pagina
     public static int sizeElementMap = 75*Constante.PANTALLA_ANCHO/1080;
+
     private Snake snake;
     private Baleada apple;
     private Handler handler;
@@ -40,40 +47,69 @@ public class VistaJuego extends View {
     private boolean loadedsound;
     private SoundPool soundPool;
 
-    public VistaJuego(Context context, @Nullable AttributeSet attrs) {
+    //Metodo en el que se determina el area en el que se va mover el gusanito
+    public VistaJuego(Context context, @Nullable AttributeSet attrs)
+    {
         super(context, attrs);
         this.context = context;
         SharedPreferences sp = context.getSharedPreferences("gamesetting", Context.MODE_PRIVATE);
-        if(sp!=null){
+
+        if(sp!=null)
+        {
             bestScore = sp.getInt("bestscore",0);
         }
-        bmGrass1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.piedra);
-        bmGrass1 = Bitmap.createScaledBitmap(bmGrass1, sizeElementMap, sizeElementMap, true);
-        bmGrass2 = BitmapFactory.decodeResource(this.getResources(), R.drawable.piedra2);
-        bmGrass2 = Bitmap.createScaledBitmap(bmGrass2, sizeElementMap, sizeElementMap, true);
-        bmSnake1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.mazacuata);
-        bmSnake1 = Bitmap.createScaledBitmap(bmSnake1, 14*sizeElementMap, sizeElementMap, true);
-        bmApple = BitmapFactory.decodeResource(this.getResources(), R.drawable.baleada);
-        bmApple = Bitmap.createScaledBitmap(bmApple, sizeElementMap, sizeElementMap, true);
-        for(int i = 0; i < h; i++){
-            for (int j = 0; j < w; j++){
-                if((j+i)%2==0){
-                    arrGrass.add(new AreaJuego(bmGrass1, j*bmGrass1.getWidth() + Constante.PANTALLA_ANCHO/2 - (w/2)*bmGrass1.getWidth(), i*bmGrass1.getHeight()+50*Constante.PANTALLA_ALTURA/1920, bmGrass1.getWidth(), bmGrass1.getHeight()));
-                }else{
-                    arrGrass.add(new AreaJuego(bmGrass2, j*bmGrass2.getWidth() + Constante.PANTALLA_ANCHO/2 - (w/2)*bmGrass2.getWidth(), i*bmGrass2.getHeight()+50*Constante.PANTALLA_ALTURA/1920, bmGrass2.getWidth(), bmGrass2.getHeight()));
+
+        /*
+        Aquí se descomponen las imagenes con el uso de la clase bitmap
+        en donde le damos el tamaño que queremos para que sea el adecuado al momento
+        de visualizarlo en el area de juego
+        * */
+        pierda1 = BitmapFactory.decodeResource(this.getResources(), R.drawable.piedra);
+        pierda1 = Bitmap.createScaledBitmap(pierda1, sizeElementMap, sizeElementMap, true);
+        piedra2 = BitmapFactory.decodeResource(this.getResources(), R.drawable.piedra2);
+        piedra2 = Bitmap.createScaledBitmap(piedra2, sizeElementMap, sizeElementMap, true);
+        bmMasacuata = BitmapFactory.decodeResource(this.getResources(), R.drawable.mazacuata);
+        bmMasacuata = Bitmap.createScaledBitmap(bmMasacuata, 14*sizeElementMap, sizeElementMap, true);
+        bmBaleada = BitmapFactory.decodeResource(this.getResources(), R.drawable.baleada);
+        bmBaleada = Bitmap.createScaledBitmap(bmBaleada, sizeElementMap, sizeElementMap, true);
+
+        /*  En esta matriz distrinuimos las imagenes al rededor del area del juego por
+            medio de dos ciclos for
+         */
+        for(int i = 0; i < altoArea; i++)
+        {
+            for (int j = 0; j < anchoArea; j++)
+            {
+                /*Decisión donde observamos que siempre sean numeros pares (con % sabemos si hay remainder o no)
+                *Si es par el numero ingresará una pieda de la imagen 1, sino agregará una piedra de la imagen 2
+                * */
+                if((j+i)%2==0)
+                {
+                    arregloPiedras.add(new AreaJuego(pierda1, j*pierda1.getWidth() + Constante.PANTALLA_ANCHO/2 - (anchoArea/2)*pierda1.getWidth(), i*pierda1.getHeight()+50*Constante.PANTALLA_ALTURA/1920, pierda1.getWidth(), pierda1.getHeight()));
+                }
+                else
+                {
+                    arregloPiedras.add(new AreaJuego(piedra2, j*piedra2.getWidth() + Constante.PANTALLA_ANCHO/2 - (anchoArea/2)*piedra2.getWidth(), i*piedra2.getHeight()+50*Constante.PANTALLA_ALTURA/1920, piedra2.getWidth(), piedra2.getHeight()));
                 }
             }
         }
-        snake = new Snake(bmSnake1,arrGrass.get(126).getX(),arrGrass.get(126).getY(), 4);
-        apple = new Baleada(bmApple, arrGrass.get(randomApple()[0]).getX(), arrGrass.get(randomApple()[1]).getY());
+
+        //Aquí se coloca en que lado deseamos que aparezca la masacuata al iniciar el juego
+        snake = new Snake(bmMasacuata,arregloPiedras.get(126).getX(),arregloPiedras.get(126).getY(), 4);
+
+        apple = new Baleada(bmBaleada, arregloPiedras.get(randomApple()[0]).getX(), arregloPiedras.get(randomApple()[1]).getY());
         handler = new Handler();
-        r = new Runnable() {
+
+        r = new Runnable()
+        {
             @Override
             public void run() {
                 invalidate();
             }
         };
-        if(Build.VERSION.SDK_INT>=21){
+
+        if(Build.VERSION.SDK_INT>=21)
+        {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_GAME)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -81,34 +117,39 @@ public class VistaJuego extends View {
             SoundPool.Builder builder = new SoundPool.Builder();
             builder.setAudioAttributes(audioAttributes).setMaxStreams(5);
             this.soundPool = builder.build();
-        }else{
+        }
+        else
+        {
             soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         }
-        this.soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+
+        this.soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener()
+        {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
                 loadedsound = true;
             }
         });
-          soundEat = this.soundPool.load(context, R.raw.eat, 1);
-          soundDie = this.soundPool.load(context, R.raw.die, 1);
+
+        soundEat = this.soundPool.load(context, R.raw.eat, 1);
+        soundDie = this.soundPool.load(context, R.raw.die, 1);
     }
 
     private int[] randomApple(){
         int []xy = new int[2];
         Random r = new Random();
-        xy[0] = r.nextInt(arrGrass.size()-1);
-        xy[1] = r.nextInt(arrGrass.size()-1);
-        Rect rect = new Rect(arrGrass.get(xy[0]).getX(), arrGrass.get(xy[1]).getY(), arrGrass.get(xy[0]).getX()+sizeElementMap, arrGrass.get(xy[1]).getY()+sizeElementMap);
+        xy[0] = r.nextInt(arregloPiedras.size()-1);
+        xy[1] = r.nextInt(arregloPiedras.size()-1);
+        Rect rect = new Rect(arregloPiedras.get(xy[0]).getX(), arregloPiedras.get(xy[1]).getY(), arregloPiedras.get(xy[0]).getX()+sizeElementMap, arregloPiedras.get(xy[1]).getY()+sizeElementMap);
         boolean check = true;
         while (check){
             check = false;
             for (int i = 0; i < snake.getArrPartSnake().size(); i++){
                 if(rect.intersect(snake.getArrPartSnake().get(i).getrBody())){
                     check = true;
-                    xy[0] = r.nextInt(arrGrass.size()-1);
-                    xy[1] = r.nextInt(arrGrass.size()-1);
-                    rect = new Rect(arrGrass.get(xy[0]).getX(), arrGrass.get(xy[1]).getY(), arrGrass.get(xy[0]).getX()+sizeElementMap, arrGrass.get(xy[1]).getY()+sizeElementMap);
+                    xy[0] = r.nextInt(arregloPiedras.size()-1);
+                    xy[1] = r.nextInt(arregloPiedras.size()-1);
+                    rect = new Rect(arregloPiedras.get(xy[0]).getX(), arregloPiedras.get(xy[1]).getY(), arregloPiedras.get(xy[0]).getX()+sizeElementMap, arregloPiedras.get(xy[1]).getY()+sizeElementMap);
                 }
             }
         }
@@ -163,18 +204,23 @@ public class VistaJuego extends View {
         return true;
     }
 
+    //Metodo utilizado para poder dibujar
     public void draw(Canvas canvas){
         super.draw(canvas);
-        //canvas.drawColor(0xFF065700);
-        for(int i = 0; i < arrGrass.size(); i++){
-            canvas.drawBitmap(arrGrass.get(i).getBm(), arrGrass.get(i).getX(), arrGrass.get(i).getY(), null);
+        for(int i = 0; i < arregloPiedras.size(); i++)
+        {
+            canvas.drawBitmap(arregloPiedras.get(i).getBm(), arregloPiedras.get(i).getX(), arregloPiedras.get(i).getY(), null);
         }
+
+        //Se llama el metodo de la clase Snake para que sea dibujado
+        snake.draw(canvas);
+
         if(isPlaying){
             snake.update();
-            if(snake.getArrPartSnake().get(0).getX() < this.arrGrass.get(0).getX()
-                    ||snake.getArrPartSnake().get(0).getY() < this.arrGrass.get(0).getY()
-                    ||snake.getArrPartSnake().get(0).getY()+sizeElementMap>this.arrGrass.get(this.arrGrass.size()-1).getY() + sizeElementMap
-                    ||snake.getArrPartSnake().get(0).getX()+sizeElementMap>this.arrGrass.get(this.arrGrass.size()-1).getX() + sizeElementMap){
+            if(snake.getArrPartSnake().get(0).getX() < this.arregloPiedras.get(0).getX()
+                    ||snake.getArrPartSnake().get(0).getY() < this.arregloPiedras.get(0).getY()
+                    ||snake.getArrPartSnake().get(0).getY()+sizeElementMap>this.arregloPiedras.get(this.arregloPiedras.size()-1).getY() + sizeElementMap
+                    ||snake.getArrPartSnake().get(0).getX()+sizeElementMap>this.arregloPiedras.get(this.arregloPiedras.size()-1).getX() + sizeElementMap){
                 gameOver();
             }
             for (int i = 1; i < snake.getArrPartSnake().size(); i++){
@@ -183,13 +229,13 @@ public class VistaJuego extends View {
                 }
             }
         }
-        snake.draw(canvas);
+
         apple.draw(canvas);
         if(snake.getArrPartSnake().get(0).getrBody().intersect(apple.getR())){
             if(loadedsound){
                 int streamId = this.soundPool.play(this.soundEat, (float)0.5, (float)0.5, 1, 0, 1f);
             }
-            apple.reset(arrGrass.get(randomApple()[0]).getX(), arrGrass.get(randomApple()[1]).getY());
+            apple.reset(arregloPiedras.get(randomApple()[0]).getX(), arregloPiedras.get(randomApple()[1]).getY());
             snake.addPart();
             score++;
             MainActivity.txt_score.setText(score+"");
@@ -216,17 +262,17 @@ public class VistaJuego extends View {
     }
 
     public void reset(){
-        for(int i = 0; i < h; i++){
-            for (int j = 0; j < w; j++){
+        for(int i = 0; i < altoArea; i++){
+            for (int j = 0; j < anchoArea; j++){
                 if((j+i)%2==0){
-                    arrGrass.add(new AreaJuego(bmGrass1, j*bmGrass1.getWidth() + Constante.PANTALLA_ANCHO/2 - (w/2)*bmGrass1.getWidth(), i*bmGrass1.getHeight()+50*Constante.PANTALLA_ALTURA/1920, bmGrass1.getWidth(), bmGrass1.getHeight()));
+                    arregloPiedras.add(new AreaJuego(pierda1, j*pierda1.getWidth() + Constante.PANTALLA_ANCHO/2 - (anchoArea/2)*pierda1.getWidth(), i*pierda1.getHeight()+50*Constante.PANTALLA_ALTURA/1920, pierda1.getWidth(), pierda1.getHeight()));
                 }else{
-                    arrGrass.add(new AreaJuego(bmGrass2, j*bmGrass2.getWidth() + Constante.PANTALLA_ANCHO/2 - (w/2)*bmGrass2.getWidth(), i*bmGrass2.getHeight()+50*Constante.PANTALLA_ALTURA/1920, bmGrass2.getWidth(), bmGrass2.getHeight()));
+                    arregloPiedras.add(new AreaJuego(piedra2, j*piedra2.getWidth() + Constante.PANTALLA_ANCHO/2 - (anchoArea/2)*piedra2.getWidth(), i*piedra2.getHeight()+50*Constante.PANTALLA_ALTURA/1920, piedra2.getWidth(), piedra2.getHeight()));
                 }
             }
         }
-        snake = new Snake(bmSnake1,arrGrass.get(126).getX(),arrGrass.get(126).getY(), 4);
-        apple = new Baleada(bmApple, arrGrass.get(randomApple()[0]).getX(), arrGrass.get(randomApple()[1]).getY());
+        snake = new Snake(bmMasacuata,arregloPiedras.get(126).getX(),arregloPiedras.get(126).getY(), 4);
+        apple = new Baleada(bmBaleada, arregloPiedras.get(randomApple()[0]).getX(), arregloPiedras.get(randomApple()[1]).getY());
         score = 0;
     }
 

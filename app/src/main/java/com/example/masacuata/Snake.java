@@ -8,20 +8,33 @@ import java.util.ArrayList;
 //en esta clase realizamos cada movimiento de la serpiente
 public class Snake {
     private boolean move_left, move_right, move_top, move_bottom;
+
+    //Se importa la clase Bitmap y se hace un atributo para cada una de las partes de la serpiente
     private Bitmap bm, bm_head_up, bm_head_down, bm_head_left, bm_head_right, bm_head_body_vertical, bm_body_horizontal,
     bm_body_top_right, bm_body_top_left, bm_body_bottom_right, bm_body_botoom_left, bm_tail_right, bm_tail_left,
     bm_tail_up, bm_tail_down;
 
+    //Se crea una variable para el eje x y el eje y, tambien para el tamaño que es el mismo de la serpiente
     private int x, y, length;
+
+    //Se crea un arreglo el cual se utiliza para formar la serpiente
     private ArrayList<PartSnake> arrPartSnake= new ArrayList<>();
 
     //Metodo constructor
-    public Snake(Bitmap bm, int x, int y, int length) {
+    public Snake(Bitmap bm, int x, int y, int length)
+    {
         this.bm = bm;
         this.x = x;
         this.y = y;
         this.length = length;
         //**************************
+
+        /*Devuelve un mapa de bits del subconjunto especificado del mapa de bits de origen. El nuevo mapa de bits puede ser el
+          mismo objeto que el origen o se puede haber realizado una copia. Se inicializa con la misma densidad y espacio de color que el
+          mapa de bits original.
+          mejor explicación:
+          https://developer.android.com/reference/android/graphics/Bitmap#createBitmap(android.graphics.Bitmap,%20int,%20int,%20int,%20int)
+        */
         bm_body_botoom_left= Bitmap.createBitmap(bm,0, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
         bm_body_bottom_right= Bitmap.createBitmap(bm,VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
         bm_body_horizontal= Bitmap.createBitmap(bm, 2*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
@@ -36,11 +49,19 @@ public class Snake {
         bm_tail_right= Bitmap.createBitmap(bm, 11*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
         bm_tail_left= Bitmap.createBitmap(bm, 12*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
         bm_tail_down= Bitmap.createBitmap(bm, 13*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+
+        //Aquí se crea una serpiente por default cuando se inicia el juego
         arrPartSnake.add(new PartSnake(bm_head_right, x, y));
-        for (int i= 1; i< length - 1; i++){
+
+        //En este ciclo se van añadiendo las partes del cuerpo de la serpiente
+        for (int i= 1; i< length - 1; i++)
+        {
             arrPartSnake.add(new PartSnake(bm_body_horizontal, arrPartSnake.get(i-1).getX() - VistaJuego.sizeElementMap, y));
         }
+
+        //En esta parte se añade la cola
         arrPartSnake.add(new PartSnake(bm_tail_right, arrPartSnake.get(length-2).getX() - VistaJuego.sizeElementMap, y));
+
         setMove_right(true);
     }
 
@@ -107,14 +128,17 @@ public class Snake {
         }
     }
 
+    //En este metodo se dibuja la serpiente, de la misma manera con la que se hizo el area de juego
     public void draw(Canvas canvas){
-        for (int i= 0; i< length; i++){
+
+        for (int i= 0; i< length; i++)
+        {
             canvas.drawBitmap(arrPartSnake.get(i).getBm(), arrPartSnake.get(i).getX(), arrPartSnake.get(i).getY(), null);
         }
+
     }
 
-    //Get y Sett
-
+    //Inicio del encapsulamiento
     public Bitmap getBm() {
         return bm;
     }
@@ -258,6 +282,7 @@ public class Snake {
     public void setLength(int length) {
         this.length = length;
     }
+    //Fin del del encapsulamiento
 
     public ArrayList<PartSnake> getArrPartSnake() {
         return arrPartSnake;

@@ -15,14 +15,20 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Variables Globales
     public static ImageView img_swipe;
     public static Dialog dialogScore;
     private VistaJuego gv;
     public static TextView txt_score, txt_best_score, txt_dialog_score, txt_dialog_best_score;
+
+    //Metodo OnCreate este metodo se genera en cuanto se inicia la aplicación
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*Metodo para utiliza todos el ancho de la pantalla*/
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        //Metodo para determinar dimensiones de la pantalla
         DisplayMetrics dm = new DisplayMetrics();
         this.getWindowManager().getDefaultDisplay().getMetrics(dm);
         Constante.PANTALLA_ANCHO = dm.widthPixels;
