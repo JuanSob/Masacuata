@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.animation.ScaleAnimation;
 
-class Baleada {
+public class Baleada {
     private Bitmap bm;
     private int x, y;
     private Rect r;
@@ -14,6 +14,15 @@ class Baleada {
         this.bm = bm;
         this.x = x;
         this.y = y;
+    }
+
+    public void draw(Canvas canvas){
+        canvas.drawBitmap(bm, x, y, null);
+    }
+
+    public void reset(int nx, int ny){
+        this.x = nx;
+        this.y = ny;
     }
 
     public Bitmap getBm() {
@@ -41,21 +50,10 @@ class Baleada {
     }
 
     public Rect getR() {
-        return new Rect(this.x, this.y, this.x+VistaJuego.tamanoMapa, this.y+VistaJuego.tamanoMapa);
+        return new Rect(this.x, this.y, this.x+VistaJuego.sizeElementMap, this.y+VistaJuego.sizeElementMap);
     }
 
     public void setR(Rect r) {
         this.r = r;
     }
-
-    public void draw(Canvas canvas) {
-        canvas.drawBitmap(bm, x,y, null);
-    }
-
-    public void reset(int nx, int ny) {
-        this.x = nx;
-        this.y = ny;
-    }
-
-
 }

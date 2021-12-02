@@ -41,7 +41,7 @@ public class PartSnake {
 
     //****************************
     public Rect getrBody() {
-        return new Rect(this.x, this.y, this.x+VistaJuego.tamanoMapa, this.y+VistaJuego.tamanoMapa);
+        return new Rect(this.x, this.y, this.x+VistaJuego.sizeElementMap, this.y+VistaJuego.sizeElementMap);
     }
 
     public void setrBody(Rect rBody) {
@@ -49,7 +49,7 @@ public class PartSnake {
     }
 
     public Rect getrTop() {
-        return new Rect(this.x, this.y-10*Constante.PANTALLA_ALTURA/1920, this.x+VistaJuego.tamanoMapa, this.y);
+        return new Rect(this.x, this.y-10*Constante.PANTALLA_ALTURA/1920, this.x+VistaJuego.sizeElementMap, this.y);
     }
 
     public void setrTop(Rect rTop) {
@@ -57,7 +57,7 @@ public class PartSnake {
     }
 
     public Rect getrBottom() {
-        return new Rect(this.x, this.y+VistaJuego.tamanoMapa, this.x+VistaJuego.tamanoMapa, this.y+VistaJuego.tamanoMapa+10*Constante.PANTALLA_ALTURA/1920);
+        return new Rect(this.x, this.y+VistaJuego.sizeElementMap, this.x+VistaJuego.sizeElementMap, this.y+VistaJuego.sizeElementMap+10*Constante.PANTALLA_ALTURA/1920);
     }
 
     public void setrBottom(Rect rBottom) {
@@ -65,7 +65,7 @@ public class PartSnake {
     }
 
     public Rect getrLeft() {
-        return new Rect(this.x-10*Constante.PANTALLA_ANCHO/1080, this.y, this.x, this.y+VistaJuego.tamanoMapa);
+        return new Rect(this.x-10*Constante.PANTALLA_ANCHO/1080, this.y, this.x, this.y+VistaJuego.sizeElementMap);
     }
 
     public void setrLeft(Rect rLeft) {
@@ -73,7 +73,7 @@ public class PartSnake {
     }
 
     public Rect getrRight() {
-        return new Rect(this.x+VistaJuego.tamanoMapa, this.y, this.x+VistaJuego.tamanoMapa+10*Constante.PANTALLA_ANCHO/1080, this.y+VistaJuego.tamanoMapa);
+        return new Rect(this.x+VistaJuego.sizeElementMap, this.y, this.x+VistaJuego.sizeElementMap+10*Constante.PANTALLA_ANCHO/1080, this.y+VistaJuego.sizeElementMap);
     }
 
     public void setrRight(Rect rRight) {

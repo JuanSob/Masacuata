@@ -22,25 +22,25 @@ public class Snake {
         this.y = y;
         this.length = length;
         //**************************
-        bm_body_botoom_left= Bitmap.createBitmap(bm,0, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
-        bm_body_bottom_right= Bitmap.createBitmap(bm,VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
-        bm_body_horizontal= Bitmap.createBitmap(bm, 2*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
-        bm_body_top_left= Bitmap.createBitmap(bm, 3*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
-        bm_body_top_right= Bitmap.createBitmap(bm, 4*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
-        bm_head_body_vertical= Bitmap.createBitmap(bm, 5*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
-        bm_head_down= Bitmap.createBitmap(bm, 6*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
-        bm_head_left= Bitmap.createBitmap(bm, 7*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
-        bm_head_right= Bitmap.createBitmap(bm, 8*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
-        bm_head_up= Bitmap.createBitmap(bm, 9*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
-        bm_tail_up= Bitmap.createBitmap(bm, 10*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
-        bm_tail_right= Bitmap.createBitmap(bm, 11*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
-        bm_tail_left= Bitmap.createBitmap(bm, 12*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
-        bm_tail_down= Bitmap.createBitmap(bm, 13*VistaJuego.tamanoMapa, 0, VistaJuego.tamanoMapa, VistaJuego.tamanoMapa);
+        bm_body_botoom_left= Bitmap.createBitmap(bm,0, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+        bm_body_bottom_right= Bitmap.createBitmap(bm,VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+        bm_body_horizontal= Bitmap.createBitmap(bm, 2*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+        bm_body_top_left= Bitmap.createBitmap(bm, 3*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+        bm_body_top_right= Bitmap.createBitmap(bm, 4*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+        bm_head_body_vertical= Bitmap.createBitmap(bm, 5*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+        bm_head_down= Bitmap.createBitmap(bm, 6*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+        bm_head_left= Bitmap.createBitmap(bm, 7*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+        bm_head_right= Bitmap.createBitmap(bm, 8*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+        bm_head_up= Bitmap.createBitmap(bm, 9*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+        bm_tail_up= Bitmap.createBitmap(bm, 10*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+        bm_tail_right= Bitmap.createBitmap(bm, 11*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+        bm_tail_left= Bitmap.createBitmap(bm, 12*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
+        bm_tail_down= Bitmap.createBitmap(bm, 13*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
         arrPartSnake.add(new PartSnake(bm_head_right, x, y));
         for (int i= 1; i< length - 1; i++){
-            arrPartSnake.add(new PartSnake(bm_body_horizontal, arrPartSnake.get(i-1).getX() - VistaJuego.tamanoMapa, y));
+            arrPartSnake.add(new PartSnake(bm_body_horizontal, arrPartSnake.get(i-1).getX() - VistaJuego.sizeElementMap, y));
         }
-        arrPartSnake.add(new PartSnake(bm_tail_right, arrPartSnake.get(length-2).getX() - VistaJuego.tamanoMapa, y));
+        arrPartSnake.add(new PartSnake(bm_tail_right, arrPartSnake.get(length-2).getX() - VistaJuego.sizeElementMap, y));
         setMove_right(true);
     }
 
@@ -50,16 +50,16 @@ public class Snake {
             arrPartSnake.get(i).setY(arrPartSnake.get(i - 1).getY());
         }
         if (move_right) {
-            arrPartSnake.get(0).setX(arrPartSnake.get(0).getX() + VistaJuego.tamanoMapa);
+            arrPartSnake.get(0).setX(arrPartSnake.get(0).getX() + VistaJuego.sizeElementMap);
             arrPartSnake.get(0).setBm(bm_head_right);
         } else if (move_left) {
-            arrPartSnake.get(0).setX(arrPartSnake.get(0).getX() - VistaJuego.tamanoMapa);
+            arrPartSnake.get(0).setX(arrPartSnake.get(0).getX() - VistaJuego.sizeElementMap);
             arrPartSnake.get(0).setBm(bm_head_left);
         } else if (move_top) {
-            arrPartSnake.get(0).setY(arrPartSnake.get(0).getY() - VistaJuego.tamanoMapa);
+            arrPartSnake.get(0).setY(arrPartSnake.get(0).getY() - VistaJuego.sizeElementMap);
             arrPartSnake.get(0).setBm(bm_head_up);
         } else if (move_bottom) {
-            arrPartSnake.get(0).setY(arrPartSnake.get(0).getY() + VistaJuego.tamanoMapa);
+            arrPartSnake.get(0).setY(arrPartSnake.get(0).getY() + VistaJuego.sizeElementMap);
             arrPartSnake.get(0).setBm(bm_head_down);
         }
         for (int i = 1; i < length - 1; i++) {
@@ -314,13 +314,13 @@ public class Snake {
         PartSnake p = this.arrPartSnake.get(length-1);
         this.length +=1;
         if(p.getBm() == bm_tail_right){
-            this.arrPartSnake.add(new PartSnake(bm_tail_right, p.getX() - VistaJuego.tamanoMapa, p.getY()));
+            this.arrPartSnake.add(new PartSnake(bm_tail_right, p.getX() - VistaJuego.sizeElementMap, p.getY()));
         }else if(p.getBm() == bm_tail_left){
-            this.arrPartSnake.add(new PartSnake(bm_tail_left, p.getX() + VistaJuego.tamanoMapa, p.getY()));
+            this.arrPartSnake.add(new PartSnake(bm_tail_left, p.getX() + VistaJuego.sizeElementMap, p.getY()));
         }else if(p.getBm() == bm_tail_up){
-            this.arrPartSnake.add(new PartSnake(bm_tail_up, p.getX(), p.getY()+VistaJuego.tamanoMapa));
+            this.arrPartSnake.add(new PartSnake(bm_tail_up, p.getX(), p.getY()+VistaJuego.sizeElementMap));
         }else if(p.getBm() == bm_tail_down){
-            this.arrPartSnake.add(new PartSnake(bm_tail_down, p.getX(), p.getY()-VistaJuego.tamanoMapa));
+            this.arrPartSnake.add(new PartSnake(bm_tail_down, p.getX(), p.getY()-VistaJuego.sizeElementMap));
         }
     }
 }

@@ -71,4 +71,14 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/imgswipe"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/swipe"
+        android:visibility="invisible" />
+
 </RelativeLayout>
