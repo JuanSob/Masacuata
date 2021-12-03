@@ -7,7 +7,9 @@ import java.util.ArrayList;
 
 //en esta clase realizamos cada movimiento de la serpiente
 public class Snake {
-    private boolean move_left, move_right, move_top, move_bottom;
+
+    //Atributos utilizados para visualizar determinar adonde se mueve la serpiente
+    private boolean moverIzquierda, moverDerecha, moverArriba, moverAbajo;
 
     //Se importa la clase Bitmap y se hace un atributo para cada una de las partes de la serpiente
     private Bitmap bm, bm_head_up, bm_head_down, bm_head_left, bm_head_right, bm_head_body_vertical, bm_body_horizontal,
@@ -18,7 +20,7 @@ public class Snake {
     private int x, y, length;
 
     //Se crea un arreglo el cual se utiliza para formar la serpiente
-    private ArrayList<PartSnake> arrPartSnake= new ArrayList<>();
+    private ArrayList<PartSnake> arregloParteSerpiente= new ArrayList<>();
 
     //Metodo constructor
     public Snake(Bitmap bm, int x, int y, int length)
@@ -51,80 +53,131 @@ public class Snake {
         bm_tail_down= Bitmap.createBitmap(bm, 13*VistaJuego.sizeElementMap, 0, VistaJuego.sizeElementMap, VistaJuego.sizeElementMap);
 
         //Aquí se crea una serpiente por default cuando se inicia el juego
-        arrPartSnake.add(new PartSnake(bm_head_right, x, y));
+        arregloParteSerpiente.add(new PartSnake(bm_head_right, x, y));
 
         //En este ciclo se van añadiendo las partes del cuerpo de la serpiente
         for (int i= 1; i< length - 1; i++)
         {
-            arrPartSnake.add(new PartSnake(bm_body_horizontal, arrPartSnake.get(i-1).getX() - VistaJuego.sizeElementMap, y));
+            arregloParteSerpiente.add(new PartSnake(bm_body_horizontal, arregloParteSerpiente.get(i-1).getX() - VistaJuego.sizeElementMap, y));
         }
 
         //En esta parte se añade la cola
-        arrPartSnake.add(new PartSnake(bm_tail_right, arrPartSnake.get(length-2).getX() - VistaJuego.sizeElementMap, y));
+        arregloParteSerpiente.add(new PartSnake(bm_tail_right, arregloParteSerpiente.get(length-2).getX() - VistaJuego.sizeElementMap, y));
 
+        //Se inicializa que la serpiente siempre se mueva al lado derecho
         setMove_right(true);
     }
 
-    public void update() {
-        for (int i = length - 1; i > 0; i--) {
-            arrPartSnake.get(i).setX(arrPartSnake.get(i - 1).getX());
-            arrPartSnake.get(i).setY(arrPartSnake.get(i - 1).getY());
+    //En este metodo se actualiza el movimiento de la serpiente
+    public void update()
+    {
+        //Aquí en el for se utiliza el valor de la cabeza como inicio
+        for (int i = length - 1; i > 0; i--)
+        {
+            /*
+                Se utiliza i-1, el valor de la cabeza es i
+                entonces el resto del cuerpo irá atras, una parte atras de la matriz donde está
+                la cabeza igualando la frecuencia
+            */
+            arregloParteSerpiente.get(i).setX(arregloParteSerpiente.get(i - 1).getX());
+            arregloParteSerpiente.get(i).setY(arregloParteSerpiente.get(i - 1).getY());
         }
-        if (move_right) {
-            arrPartSnake.get(0).setX(arrPartSnake.get(0).getX() + VistaJuego.sizeElementMap);
-            arrPartSnake.get(0).setBm(bm_head_right);
-        } else if (move_left) {
-            arrPartSnake.get(0).setX(arrPartSnake.get(0).getX() - VistaJuego.sizeElementMap);
-            arrPartSnake.get(0).setBm(bm_head_left);
-        } else if (move_top) {
-            arrPartSnake.get(0).setY(arrPartSnake.get(0).getY() - VistaJuego.sizeElementMap);
-            arrPartSnake.get(0).setBm(bm_head_up);
-        } else if (move_bottom) {
-            arrPartSnake.get(0).setY(arrPartSnake.get(0).getY() + VistaJuego.sizeElementMap);
-            arrPartSnake.get(0).setBm(bm_head_down);
+
+        /*Decisiones que determinan en que parte del mapa se ubicará la serpiente y que
+        imagen de la cabeza se verá, para arriba, izquierda, derecha
+        se necesita unicamente el movimiento de la cabeza luego las demás partes del cuermo seguirán el movimiento
+        */
+        if (moverDerecha)
+        {
+            arregloParteSerpiente.get(0).setX(arregloParteSerpiente.get(0).getX() + VistaJuego.sizeElementMap);
+            arregloParteSerpiente.get(0).setBm(bm_head_right);
         }
-        for (int i = 1; i < length - 1; i++) {
-            if (arrPartSnake.get(i).getrLeft().intersect(arrPartSnake.get(i + 1).getrBody())
-                    && arrPartSnake.get(i).getrBottom().intersect(arrPartSnake.get(i - 1).getrBody())
-                    || arrPartSnake.get(i).getrLeft().intersect(arrPartSnake.get(i - 1).getrBody())
-                    && arrPartSnake.get(i).getrBottom().intersect(arrPartSnake.get(i + 1).getrBody())) {
-                arrPartSnake.get(i).setBm(bm_body_botoom_left);
-            } else if (arrPartSnake.get(i).getrRight().intersect(arrPartSnake.get(i + 1).getrBody())
-                    && arrPartSnake.get(i).getrBottom().intersect(arrPartSnake.get(i - 1).getrBody())
-                    || arrPartSnake.get(i).getrRight().intersect(arrPartSnake.get(i - 1).getrBody())
-                    && arrPartSnake.get(i).getrBottom().intersect(arrPartSnake.get(i + 1).getrBody())) {
-                arrPartSnake.get(i).setBm(bm_body_bottom_right);
-            } else if (arrPartSnake.get(i).getrLeft().intersect(arrPartSnake.get(i + 1).getrBody())
-                    && arrPartSnake.get(i).getrTop().intersect(arrPartSnake.get(i - 1).getrBody())
-                    || arrPartSnake.get(i).getrLeft().intersect(arrPartSnake.get(i - 1).getrBody())
-                    && arrPartSnake.get(i).getrTop().intersect(arrPartSnake.get(i + 1).getrBody())) {
-                arrPartSnake.get(i).setBm(bm_body_top_left);
-            } else if (arrPartSnake.get(i).getrRight().intersect(arrPartSnake.get(i + 1).getrBody())
-                    && arrPartSnake.get(i).getrTop().intersect(arrPartSnake.get(i - 1).getrBody())
-                    || arrPartSnake.get(i).getrRight().intersect(arrPartSnake.get(i - 1).getrBody())
-                    && arrPartSnake.get(i).getrTop().intersect(arrPartSnake.get(i + 1).getrBody())) {
-                arrPartSnake.get(i).setBm(bm_body_top_right);
-            } else if (arrPartSnake.get(i).getrTop().intersect(arrPartSnake.get(i + 1).getrBody())
-                    && arrPartSnake.get(i).getrBottom().intersect(arrPartSnake.get(i - 1).getrBody())
-                    || arrPartSnake.get(i).getrTop().intersect(arrPartSnake.get(i - 1).getrBody())
-                    && arrPartSnake.get(i).getrBottom().intersect(arrPartSnake.get(i + 1).getrBody())) {
-                arrPartSnake.get(i).setBm(bm_head_body_vertical);
-            } else if (arrPartSnake.get(i).getrLeft().intersect(arrPartSnake.get(i + 1).getrBody())
-                    && arrPartSnake.get(i).getrRight().intersect(arrPartSnake.get(i - 1).getrBody())
-                    || arrPartSnake.get(i).getrLeft().intersect(arrPartSnake.get(i - 1).getrBody())
-                    && arrPartSnake.get(i).getrRight().intersect(arrPartSnake.get(i + 1).getrBody())) {
-                arrPartSnake.get(i).setBm(bm_body_horizontal);
+        else if (moverIzquierda)
+        {
+            arregloParteSerpiente.get(0).setX(arregloParteSerpiente.get(0).getX() - VistaJuego.sizeElementMap);
+            arregloParteSerpiente.get(0).setBm(bm_head_left);
+        }
+        else if (moverArriba)
+        {
+            arregloParteSerpiente.get(0).setY(arregloParteSerpiente.get(0).getY() - VistaJuego.sizeElementMap);
+            arregloParteSerpiente.get(0).setBm(bm_head_up);
+        }
+        else if (moverAbajo)
+        {
+            arregloParteSerpiente.get(0).setY(arregloParteSerpiente.get(0).getY() + VistaJuego.sizeElementMap);
+            arregloParteSerpiente.get(0).setBm(bm_head_down);
+        }
+        //Fin movimiento de cabeza
+
+        /*
+        * movimiento del cuerpo cuando la serpiennte se mueve
+        * */
+        for (int i = 1; i < length - 1; i++)
+        {
+            /*Se toman los disntintos tipos de caso en los que la serpiente se podría mover ejemplo:
+            ir a la derecha mientras esta para arriba
+            */
+            if (arregloParteSerpiente.get(i).getrLeft().intersect(arregloParteSerpiente.get(i + 1).getrBody())
+                    && arregloParteSerpiente.get(i).getrBottom().intersect(arregloParteSerpiente.get(i - 1).getrBody())
+                    || arregloParteSerpiente.get(i).getrLeft().intersect(arregloParteSerpiente.get(i - 1).getrBody())
+                    && arregloParteSerpiente.get(i).getrBottom().intersect(arregloParteSerpiente.get(i + 1).getrBody()))
+            {
+                arregloParteSerpiente.get(i).setBm(bm_body_botoom_left);
+            }
+            else if (arregloParteSerpiente.get(i).getrRight().intersect(arregloParteSerpiente.get(i + 1).getrBody())
+                    && arregloParteSerpiente.get(i).getrBottom().intersect(arregloParteSerpiente.get(i - 1).getrBody())
+                    || arregloParteSerpiente.get(i).getrRight().intersect(arregloParteSerpiente.get(i - 1).getrBody())
+                    && arregloParteSerpiente.get(i).getrBottom().intersect(arregloParteSerpiente.get(i + 1).getrBody()))
+            {
+                arregloParteSerpiente.get(i).setBm(bm_body_bottom_right);
+            }
+            else if (arregloParteSerpiente.get(i).getrLeft().intersect(arregloParteSerpiente.get(i + 1).getrBody())
+                    && arregloParteSerpiente.get(i).getrTop().intersect(arregloParteSerpiente.get(i - 1).getrBody())
+                    || arregloParteSerpiente.get(i).getrLeft().intersect(arregloParteSerpiente.get(i - 1).getrBody())
+                    && arregloParteSerpiente.get(i).getrTop().intersect(arregloParteSerpiente.get(i + 1).getrBody()))
+            {
+                arregloParteSerpiente.get(i).setBm(bm_body_top_left);
+            }
+            else if (arregloParteSerpiente.get(i).getrRight().intersect(arregloParteSerpiente.get(i + 1).getrBody())
+                    && arregloParteSerpiente.get(i).getrTop().intersect(arregloParteSerpiente.get(i - 1).getrBody())
+                    || arregloParteSerpiente.get(i).getrRight().intersect(arregloParteSerpiente.get(i - 1).getrBody())
+                    && arregloParteSerpiente.get(i).getrTop().intersect(arregloParteSerpiente.get(i + 1).getrBody()))
+            {
+                arregloParteSerpiente.get(i).setBm(bm_body_top_right);
+            }
+            else if (arregloParteSerpiente.get(i).getrTop().intersect(arregloParteSerpiente.get(i + 1).getrBody())
+                    && arregloParteSerpiente.get(i).getrBottom().intersect(arregloParteSerpiente.get(i - 1).getrBody())
+                    || arregloParteSerpiente.get(i).getrTop().intersect(arregloParteSerpiente.get(i - 1).getrBody())
+                    && arregloParteSerpiente.get(i).getrBottom().intersect(arregloParteSerpiente.get(i + 1).getrBody()))
+            {
+                arregloParteSerpiente.get(i).setBm(bm_head_body_vertical);
+            }
+            else if (arregloParteSerpiente.get(i).getrLeft().intersect(arregloParteSerpiente.get(i + 1).getrBody())
+                    && arregloParteSerpiente.get(i).getrRight().intersect(arregloParteSerpiente.get(i - 1).getrBody())
+                    || arregloParteSerpiente.get(i).getrLeft().intersect(arregloParteSerpiente.get(i - 1).getrBody())
+                    && arregloParteSerpiente.get(i).getrRight().intersect(arregloParteSerpiente.get(i + 1).getrBody()))
+            {
+                arregloParteSerpiente.get(i).setBm(bm_body_horizontal);
             }
 
         }
-        if(arrPartSnake.get(length-1).getrRight().intersect(arrPartSnake.get(length-2).getrBody())){
-            arrPartSnake.get(length-1).setBm(bm_tail_right);
-        }else if(arrPartSnake.get(length-1).getrLeft().intersect(arrPartSnake.get(length-2).getrBody())){
-            arrPartSnake.get(length-1).setBm(bm_tail_left);
-        }else if(arrPartSnake.get(length-1).getrTop().intersect(arrPartSnake.get(length-2).getrBody())){
-            arrPartSnake.get(length-1).setBm(bm_tail_up);
-        }else if(arrPartSnake.get(length-1).getrBottom().intersect(arrPartSnake.get(length-2).getrBody())){
-            arrPartSnake.get(length-1).setBm(bm_tail_down);
+
+        //Aquí se coloca el lugar en el que estará la cola de la serpiente
+        if(arregloParteSerpiente.get(length-1).getrRight().intersect(arregloParteSerpiente.get(length-2).getrBody()))
+        {
+            arregloParteSerpiente.get(length-1).setBm(bm_tail_right);
+        }
+        else if(arregloParteSerpiente.get(length-1).getrLeft().intersect(arregloParteSerpiente.get(length-2).getrBody()))
+        {
+            arregloParteSerpiente.get(length-1).setBm(bm_tail_left);
+        }
+        else if(arregloParteSerpiente.get(length-1).getrTop().intersect(arregloParteSerpiente.get(length-2).getrBody()))
+        {
+            arregloParteSerpiente.get(length-1).setBm(bm_tail_up);
+        }
+        else if(arregloParteSerpiente.get(length-1).getrBottom().intersect(arregloParteSerpiente.get(length-2).getrBody()))
+        {
+            arregloParteSerpiente.get(length-1).setBm(bm_tail_down);
         }
     }
 
@@ -133,7 +186,7 @@ public class Snake {
 
         for (int i= 0; i< length; i++)
         {
-            canvas.drawBitmap(arrPartSnake.get(i).getBm(), arrPartSnake.get(i).getX(), arrPartSnake.get(i).getY(), null);
+            canvas.drawBitmap(arregloParteSerpiente.get(i).getBm(), arregloParteSerpiente.get(i).getX(), arregloParteSerpiente.get(i).getY(), null);
         }
 
     }
@@ -285,67 +338,69 @@ public class Snake {
     //Fin del del encapsulamiento
 
     public ArrayList<PartSnake> getArrPartSnake() {
-        return arrPartSnake;
+        return arregloParteSerpiente;
     }
 
     public void setArrPartSnake(ArrayList<PartSnake> arrPartSnake) {
-        this.arrPartSnake = arrPartSnake;
+        this.arregloParteSerpiente = arrPartSnake;
     }
 
     public boolean isMove_left() {
-        return move_left;
+        return moverIzquierda;
     }
 
     public void setMove_left(boolean move_left) {
         s();
-        this.move_left = move_left;
+        this.moverIzquierda = move_left;
 
     }
 
     public boolean isMove_right() {
-        return move_right;
+        return moverDerecha;
     }
 
     public void setMove_right(boolean move_right) {
         s();
-        this.move_right = move_right;
+        this.moverDerecha = move_right;
     }
 
     public boolean isMove_top() {
-        return move_top;
+        return moverArriba;
     }
 
     public void setMove_top(boolean move_top) {
         s();
-        this.move_top = move_top;
+        this.moverArriba = move_top;
     }
 
     public boolean isMove_bottom() {
-        return move_bottom;
+        return moverAbajo;
     }
 
     public void setMove_bottom(boolean move_bottom) {
         s();
-        this.move_bottom = move_bottom;
+        this.moverAbajo = move_bottom;
     }
+
+    //Inicializan todas la variables en falso antes que se tome el valor que se pase en otra clase con el setter
     public void s(){
-        this.move_left=false;
-        this.move_right=false;
-        this.move_top=false;
-        this.move_bottom=false;
+        this.moverIzquierda=false;
+        this.moverDerecha=false;
+        this.moverArriba=false;
+        this.moverAbajo=false;
     }
 
     public void addPart() {
-        PartSnake p = this.arrPartSnake.get(length-1);
+        PartSnake p = this.arregloParteSerpiente.get(length-1);
         this.length +=1;
         if(p.getBm() == bm_tail_right){
-            this.arrPartSnake.add(new PartSnake(bm_tail_right, p.getX() - VistaJuego.sizeElementMap, p.getY()));
+            this.arregloParteSerpiente.add(new PartSnake(bm_tail_right, p.getX() - VistaJuego.sizeElementMap, p.getY()));
         }else if(p.getBm() == bm_tail_left){
-            this.arrPartSnake.add(new PartSnake(bm_tail_left, p.getX() + VistaJuego.sizeElementMap, p.getY()));
+            this.arregloParteSerpiente.add(new PartSnake(bm_tail_left, p.getX() + VistaJuego.sizeElementMap, p.getY()));
         }else if(p.getBm() == bm_tail_up){
-            this.arrPartSnake.add(new PartSnake(bm_tail_up, p.getX(), p.getY()+VistaJuego.sizeElementMap));
+            this.arregloParteSerpiente.add(new PartSnake(bm_tail_up, p.getX(), p.getY()+VistaJuego.sizeElementMap));
         }else if(p.getBm() == bm_tail_down){
-            this.arrPartSnake.add(new PartSnake(bm_tail_down, p.getX(), p.getY()-VistaJuego.sizeElementMap));
+            this.arregloParteSerpiente.add(new PartSnake(bm_tail_down, p.getX(), p.getY()-VistaJuego.sizeElementMap));
         }
     }
 }

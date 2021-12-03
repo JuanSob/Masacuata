@@ -34,10 +34,20 @@ public class VistaJuego extends View {
     public static int sizeElementMap = 75*Constante.PANTALLA_ANCHO/1080;
 
     private Snake snake;
-    private Baleada apple;
+    private Baleada baleada;
+
+    //actualizaciones de la interfaz del controlador
+    /*
+    * Un controlador le permite enviar y procesar objetos Message y Runnable asociados con MessageQueue de un subproceso.
+    * */
     private Handler handler;
+    /*
+    * La interfaz Runnable debe ser implementada por cualquier clase cuyas instancias estén destinadas a ser ejecutadas por un subproceso.
+    * */
     private Runnable r;
     private boolean move = false;
+
+    //M de move x eje x y Y eje y
     private float mx, my;
     public static boolean isPlaying = false;
     public static int score = 0, bestScore = 0;
@@ -97,9 +107,10 @@ public class VistaJuego extends View {
         //Aquí se coloca en que lado deseamos que aparezca la masacuata al iniciar el juego
         snake = new Snake(bmMasacuata,arregloPiedras.get(126).getX(),arregloPiedras.get(126).getY(), 4);
 
-        apple = new Baleada(bmBaleada, arregloPiedras.get(randomApple()[0]).getX(), arregloPiedras.get(randomApple()[1]).getY());
-        handler = new Handler();
+        baleada = new Baleada(bmBaleada, arregloPiedras.get(randomApple()[0]).getX(), arregloPiedras.get(randomApple()[1]).getY());
 
+        //Se inicializan
+        handler = new Handler();
         r = new Runnable()
         {
             @Override
@@ -156,45 +167,65 @@ public class VistaJuego extends View {
         return xy;
     }
 
+    //Evento cuando se hace click
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        int a = event.getActionMasked();
-        switch (a){
-            case  MotionEvent.ACTION_MOVE:{
-                if(move==false){
-                    mx = event.getX();
-                    my = event.getY();
-                    move = true;
-                }else{
-                    if(mx - event.getX() > 100 && !snake.isMove_right()){
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        //Almacenamos la variable de cuando se toca algo
+        int a = event.getActionMasked(); //returns just an event (i.e., up, down, move) information. Other info is masked out.
+        switch (a)
+        {
+            case  MotionEvent.ACTION_MOVE: //Objeto utilizado para reportar eventos de movimiento (mouse, pluma, dedo, trackball). Los eventos de movimiento pueden contener movimientos absolutos o relativos y otros datos, dependiendo del tipo de dispositivo.
+                {
+                    if(move==false)
+                    {
                         mx = event.getX();
                         my = event.getY();
-                        this.snake.setMove_left(true);
-                        isPlaying = true;
-                        MainActivity.img_swipe.setVisibility(INVISIBLE);
-                    }else if(event.getX() - mx > 100 &&!snake.isMove_left()){
-                        mx = event.getX();
-                        my = event.getY();
-                        this.snake.setMove_right(true);
-                        isPlaying = true;
-                        MainActivity.img_swipe.setVisibility(INVISIBLE);
-                    }else if(event.getY() - my > 100 && !snake.isMove_top()){
-                        mx = event.getX();
-                        my = event.getY();
-                        this.snake.setMove_bottom(true);
-                        isPlaying = true;
-                        MainActivity.img_swipe.setVisibility(INVISIBLE);
-                    }else if(my - event.getY() > 100 && !snake.isMove_bottom()){
-                        mx = event.getX();
-                        my = event.getY();
-                        this.snake.setMove_top(true);
-                        isPlaying = true;
-                        MainActivity.img_swipe.setVisibility(INVISIBLE);
+                        move = true;
                     }
+                    else
+                    {
+                        if(mx - event.getX() > 100 && !snake.isMove_right())
+                        {
+                            mx = event.getX();
+                            my = event.getY();
+                            //Se pasan los parametros a los set que hicimos en la clase snake
+                            this.snake.setMove_left(true);
+                            isPlaying = true;
+                            MainActivity.img_swipe.setVisibility(INVISIBLE);
+                        }
+                        else if(event.getX() - mx > 100 &&!snake.isMove_left())//en esta validación no se permite que la serpiente de una vuelta de 180 grados
+                        {
+                            mx = event.getX();
+                            my = event.getY();
+                            //Se pasan los parametros a los set que hicimos en la clase snake
+                            this.snake.setMove_right(true);
+                            isPlaying = true;
+                            MainActivity.img_swipe.setVisibility(INVISIBLE);
+                        }
+                        else if(event.getY() - my > 100 && !snake.isMove_top())
+                        {
+                            mx = event.getX();
+                            my = event.getY();
+                            //Se pasan los parametros a los set que hicimos en la clase snake
+                            this.snake.setMove_bottom(true);
+                            isPlaying = true;
+                            MainActivity.img_swipe.setVisibility(INVISIBLE);
+                        }
+                        else if(my - event.getY() > 100 && !snake.isMove_bottom())
+                        {
+                            mx = event.getX();
+                            my = event.getY();
+                            //Se pasan los parametros a los set que hicimos en la clase snake
+                            this.snake.setMove_top(true);
+                            isPlaying = true;
+                            MainActivity.img_swipe.setVisibility(INVISIBLE);
+                        }
                 }
-                break;
+            break;
             }
-            case MotionEvent.ACTION_UP:{
+            case MotionEvent.ACTION_UP://Un gesto presionado ha terminado, el movimiento contiene la ubicación de liberación final, así como cualquier punto intermedio desde el último evento hacia abajo o movimiento.
+            {
                 mx = 0;
                 my = 0;
                 move = false;
@@ -230,12 +261,12 @@ public class VistaJuego extends View {
             }
         }
 
-        apple.draw(canvas);
-        if(snake.getArrPartSnake().get(0).getrBody().intersect(apple.getR())){
+        baleada.draw(canvas);
+        if(snake.getArrPartSnake().get(0).getrBody().intersect(baleada.getR())){
             if(loadedsound){
                 int streamId = this.soundPool.play(this.soundEat, (float)0.5, (float)0.5, 1, 0, 1f);
             }
-            apple.reset(arregloPiedras.get(randomApple()[0]).getX(), arregloPiedras.get(randomApple()[1]).getY());
+            baleada.reset(arregloPiedras.get(randomApple()[0]).getX(), arregloPiedras.get(randomApple()[1]).getY());
             snake.addPart();
             score++;
             MainActivity.txt_score.setText(score+"");
@@ -248,6 +279,8 @@ public class VistaJuego extends View {
                 MainActivity.txt_best_score.setText(bestScore+"");
             }
         }
+
+        //Le damos un delay a la ejecución
         handler.postDelayed(r, 100);
     }
 
@@ -272,7 +305,7 @@ public class VistaJuego extends View {
             }
         }
         snake = new Snake(bmMasacuata,arregloPiedras.get(126).getX(),arregloPiedras.get(126).getY(), 4);
-        apple = new Baleada(bmBaleada, arregloPiedras.get(randomApple()[0]).getX(), arregloPiedras.get(randomApple()[1]).getY());
+        baleada = new Baleada(bmBaleada, arregloPiedras.get(randomApple()[0]).getX(), arregloPiedras.get(randomApple()[1]).getY());
         score = 0;
     }
 
