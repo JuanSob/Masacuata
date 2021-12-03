@@ -107,7 +107,8 @@ public class VistaJuego extends View {
         //Aquí se coloca en que lado deseamos que aparezca la masacuata al iniciar el juego
         snake = new Snake(bmMasacuata,arregloPiedras.get(126).getX(),arregloPiedras.get(126).getY(), 4);
 
-        baleada = new Baleada(bmBaleada, arregloPiedras.get(randomApple()[0]).getX(), arregloPiedras.get(randomApple()[1]).getY());
+        //Decimos en que lugar se colocará la baleada en primer lugar
+        baleada = new Baleada(bmBaleada, arregloPiedras.get(BaleadaAzar()[0]).getX(), arregloPiedras.get(BaleadaAzar()[1]).getY());
 
         //Se inicializan
         handler = new Handler();
@@ -146,13 +147,15 @@ public class VistaJuego extends View {
         soundDie = this.soundPool.load(context, R.raw.die, 1);
     }
 
-    private int[] randomApple(){
+    private int[] BaleadaAzar(){
         int []xy = new int[2];
         Random r = new Random();
         xy[0] = r.nextInt(arregloPiedras.size()-1);
         xy[1] = r.nextInt(arregloPiedras.size()-1);
         Rect rect = new Rect(arregloPiedras.get(xy[0]).getX(), arregloPiedras.get(xy[1]).getY(), arregloPiedras.get(xy[0]).getX()+sizeElementMap, arregloPiedras.get(xy[1]).getY()+sizeElementMap);
         boolean check = true;
+
+        //Aquí se establece que la baleada no sea colocada en el mismo lugar en el que está la serpiente
         while (check){
             check = false;
             for (int i = 0; i < snake.getArrPartSnake().size(); i++){
@@ -261,13 +264,25 @@ public class VistaJuego extends View {
             }
         }
 
+        //Se dibuja la baleada en el area de juego
         baleada.draw(canvas);
+
+        /*Cuando la serpiente se come una baleada incrementará su tamaño
+        * Entonces cuando esta intercepta el elemento de la matriz en el que se encuentra la baleada
+        * se ejecutará esta decisión
+        * */
         if(snake.getArrPartSnake().get(0).getrBody().intersect(baleada.getR())){
+
+            //En esta decision ejecutamos el sonido de la masacuata comiendo
             if(loadedsound){
                 int streamId = this.soundPool.play(this.soundEat, (float)0.5, (float)0.5, 1, 0, 1f);
             }
-            baleada.reset(arregloPiedras.get(randomApple()[0]).getX(), arregloPiedras.get(randomApple()[1]).getY());
-            snake.addPart();
+
+            //Se coloca la baleada en otra posición
+            baleada.reset(arregloPiedras.get(BaleadaAzar()[0]).getX(), arregloPiedras.get(BaleadaAzar()[1]).getY());
+
+            //Llamamos el metodo AgregarParte realizado en la clase Snake llamado addPart para añadir una parte del cuerpo a la serpiente
+            snake.AgregarParte();
             score++;
             MainActivity.txt_score.setText(score+"");
             if(score > bestScore){
@@ -305,7 +320,7 @@ public class VistaJuego extends View {
             }
         }
         snake = new Snake(bmMasacuata,arregloPiedras.get(126).getX(),arregloPiedras.get(126).getY(), 4);
-        baleada = new Baleada(bmBaleada, arregloPiedras.get(randomApple()[0]).getX(), arregloPiedras.get(randomApple()[1]).getY());
+        baleada = new Baleada(bmBaleada, arregloPiedras.get(BaleadaAzar()[0]).getX(), arregloPiedras.get(BaleadaAzar()[1]).getY());
         score = 0;
     }
 

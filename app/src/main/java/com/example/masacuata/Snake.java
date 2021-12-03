@@ -390,9 +390,14 @@ public class Snake {
         this.moverAbajo=false;
     }
 
-    public void addPart() {
+    //Metodo llamao en la clase main para añadir una parte mas a la serpiente cada vez que come
+    public void AgregarParte()
+    {
         PartSnake p = this.arregloParteSerpiente.get(length-1);
+        //Añadimos una parte mas
         this.length +=1;
+
+        //Observammos que imagen de la cola estamos utilizando para saber que imagen añadir
         if(p.getBm() == bm_tail_right){
             this.arregloParteSerpiente.add(new PartSnake(bm_tail_right, p.getX() - VistaJuego.sizeElementMap, p.getY()));
         }else if(p.getBm() == bm_tail_left){
