@@ -390,7 +390,7 @@ public class Snake {
         this.moverAbajo=false;
     }
 
-    //Metodo llamao en la clase main para añadir una parte mas a la serpiente cada vez que come
+    //Metodo llamado en la clase main para añadir una parte mas a la serpiente cada vez que come
     public void AgregarParte()
     {
         PartSnake p = this.arregloParteSerpiente.get(length-1);

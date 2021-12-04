@@ -120,6 +120,8 @@ public class VistaJuego extends View {
             }
         };
 
+
+        //Se realiza lo necesario para establecer que es necesario para poder utilizar audios
         if(Build.VERSION.SDK_INT>=21)
         {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
@@ -249,6 +251,7 @@ public class VistaJuego extends View {
         //Se llama el metodo de la clase Snake para que sea dibujado
         snake.draw(canvas);
 
+        //Se valida que el juego se siga ejecutando siempre y cuando la serpiente no salga del mapa o se toque ella misma
         if(isPlaying){
             snake.update();
             if(snake.getArrPartSnake().get(0).getX() < this.arregloPiedras.get(0).getX()
@@ -299,17 +302,22 @@ public class VistaJuego extends View {
         handler.postDelayed(r, 100);
     }
 
+
     private void gameOver() {
         isPlaying = false;
         MainActivity.dialogScore.show();
         MainActivity.txt_dialog_best_score.setText(bestScore+"");
         MainActivity.txt_dialog_score.setText(score+"");
+        /***Aquí se pausa el sonido para que se ejecute solo el de perder****/
+        soundPool.autoPause();
         if(loadedsound){
             int streamId = this.soundPool.play(this.soundDie, (float)0.5, (float)0.5, 1, 0, 1f);
         }
     }
 
+    //Metodo que restablece todos a como estaba antes despues de perder
     public void reset(){
+        soundPool.autoPause();
         for(int i = 0; i < altoArea; i++){
             for (int j = 0; j < anchoArea; j++){
                 if((j+i)%2==0){
